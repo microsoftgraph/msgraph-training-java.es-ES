@@ -1,10 +1,10 @@
 ---
-ms.openlocfilehash: 4e62f08217ab00427218cd1815d66d80fd2802de
-ms.sourcegitcommit: 2af94da662c454e765b32edeb9406812e3732406
+ms.openlocfilehash: c21adae303c65e52ec2402c56e174066f879f40b
+ms.sourcegitcommit: 189f87d879c57b11992e7bc75580b4c69e014122
 ms.translationtype: MT
 ms.contentlocale: es-ES
-ms.lasthandoff: 12/13/2019
-ms.locfileid: "40018862"
+ms.lasthandoff: 04/21/2020
+ms.locfileid: "43612089"
 ---
 <!-- markdownlint-disable MD002 MD041 -->
 
@@ -20,7 +20,7 @@ En este ejercicio, creará una nueva aplicación de Azure AD con el centro de ad
 
     - Establezca **Nombre** como `Java Graph Tutorial`.
     - Establezca **Tipos de cuenta admitidos** en **Cuentas en cualquier directorio de organización y cuentas personales de Microsoft**.
-    - Deje **URI de redireccionamiento** vacía.
+    - En **URI de redireccionamiento**, cambie la lista desplegable a **cliente público (móvil & escritorio)** y establezca `https://login.microsoftonline.com/common/oauth2/nativeclient`el valor en.
 
     ![Captura de pantalla de la página registrar una aplicación](./images/aad-register-an-app.png)
 
@@ -28,10 +28,6 @@ En este ejercicio, creará una nueva aplicación de Azure AD con el centro de ad
 
     ![Captura de pantalla del identificador de la aplicación del nuevo registro de la aplicación](./images/aad-application-id.png)
 
-1. Seleccione el vínculo **Agregar un URI de redireccionamiento** . En la página **URI de redireccionamiento** , busque la sección **URI de redireccionamiento sugeridos para clientes públicos (móvil, escritorio)** . Seleccione el `https://login.microsoftonline.com/common/oauth2/nativeclient` URI.
-
-    ![Captura de pantalla de la página URI de redireccionamiento](./images/aad-redirect-uris.png)
-
-1. Busque la sección **tipo de cliente predeterminado** y cambie la opción **tratar aplicación como un cliente público** cambie a **sí**y, a continuación, elija **Guardar**.
+1. Seleccione **Autenticación** en **Administrar**. Busque la sección **Configuración avanzada** y cambie el valor de la opción **tratar la aplicación como un cliente público** a **sí**y, a continuación, elija **Guardar**.
 
     ![Captura de pantalla de la sección tipo de cliente predeterminado](./images/aad-default-client-type.png)
