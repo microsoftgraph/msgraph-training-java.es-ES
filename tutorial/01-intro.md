@@ -1,10 +1,10 @@
 ---
-ms.openlocfilehash: f77f0518aa22d015cf5e915886f8f24a487e7bab
-ms.sourcegitcommit: 189f87d879c57b11992e7bc75580b4c69e014122
+ms.openlocfilehash: f13ee9baa26bb487d5b50bd966e40cee9ba64378
+ms.sourcegitcommit: 22ec2c0e4803b82c9d360f3609f8b15ba5d017ca
 ms.translationtype: MT
 ms.contentlocale: es-ES
-ms.lasthandoff: 04/21/2020
-ms.locfileid: "43612078"
+ms.lasthandoff: 04/29/2020
+ms.locfileid: "43940479"
 ---
 <!-- markdownlint-disable MD002 MD041 -->
 
@@ -15,7 +15,7 @@ Este tutorial le enseña a crear una aplicación de consola Java que use la API 
 
 ## <a name="prerequisites"></a>Requisitos previos
 
-Antes de iniciar este tutorial, debe tener instalado el [Kit de desarrollo de Java se (JDK)](https://java.com/en/download/faq/develop.xml) y [Gradle](https://gradle.org/) en el equipo de desarrollo. Si no tiene el JDK o el Maven, visite los vínculos anteriores para las opciones de descarga.
+Antes de iniciar este tutorial, debe tener instalado el [Kit de desarrollo de Java se (JDK)](https://java.com/en/download/faq/develop.xml) y [Gradle](https://gradle.org/) en el equipo de desarrollo. Si no tiene el JDK o Gradle, visite los vínculos anteriores para las opciones de descarga.
 
 También debe tener una cuenta de Microsoft personal con un buzón de correo en Outlook.com o una cuenta profesional o educativa de Microsoft. Si no tiene una cuenta de Microsoft, hay un par de opciones para obtener una cuenta gratuita:
 
