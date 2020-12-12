@@ -1,10 +1,10 @@
 ---
-ms.openlocfilehash: 93688a97872ad640c12c7137f4cc09ede4a98416
-ms.sourcegitcommit: 189f87d879c57b11992e7bc75580b4c69e014122
+ms.openlocfilehash: c26e5b8ab0b7c5c62b926e3f5416b94e3f10b601
+ms.sourcegitcommit: eb935a250f8531b04a42710356072b80d46ee3a4
 ms.translationtype: MT
 ms.contentlocale: es-ES
-ms.lasthandoff: 04/21/2020
-ms.locfileid: "43612071"
+ms.lasthandoff: 12/11/2020
+ms.locfileid: "49661049"
 ---
 <!-- markdownlint-disable MD002 MD041 -->
 
@@ -12,7 +12,7 @@ En este ejercicio, incorporará Microsoft Graph a la aplicación. Para esta apli
 
 ## <a name="implement-an-authentication-provider"></a>Implementación de un proveedor de autenticación
 
-El SDK de Microsoft Graph para Java requiere una implementación de `IAuthenticationProvider` la interfaz para crear una `GraphServiceClient` instancia de su objeto.
+El SDK de Microsoft Graph para Java requiere una implementación de la `IAuthenticationProvider` interfaz para crear una instancia de su `GraphServiceClient` objeto.
 
 1. Cree un archivo nuevo en el directorio **./graphtutorial/src/Main/Java/graphtutorial** denominado **SimpleAuthProvider. Java** y agregue el código siguiente.
 
@@ -25,18 +25,30 @@ El SDK de Microsoft Graph para Java requiere una implementación de `IAuthentica
     ```java
     package graphtutorial;
 
+    import java.time.LocalDateTime;
+    import java.time.ZonedDateTime;
+    import java.time.format.DateTimeFormatter;
     import java.util.LinkedList;
     import java.util.List;
+    import java.util.Set;
 
     import com.microsoft.graph.logger.DefaultLogger;
     import com.microsoft.graph.logger.LoggerLevel;
+    import com.microsoft.graph.models.extensions.Attendee;
+    import com.microsoft.graph.models.extensions.DateTimeTimeZone;
+    import com.microsoft.graph.models.extensions.EmailAddress;
     import com.microsoft.graph.models.extensions.Event;
     import com.microsoft.graph.models.extensions.IGraphServiceClient;
+    import com.microsoft.graph.models.extensions.ItemBody;
     import com.microsoft.graph.models.extensions.User;
+    import com.microsoft.graph.models.generated.AttendeeType;
+    import com.microsoft.graph.models.generated.BodyType;
+    import com.microsoft.graph.options.HeaderOption;
     import com.microsoft.graph.options.Option;
     import com.microsoft.graph.options.QueryOption;
     import com.microsoft.graph.requests.extensions.GraphServiceClient;
     import com.microsoft.graph.requests.extensions.IEventCollectionPage;
+    import com.microsoft.graph.requests.extensions.IEventCollectionRequestBuilder;
 
     /**
      * Graph
@@ -70,6 +82,7 @@ El SDK de Microsoft Graph para Java requiere una implementación de `IAuthentica
             User me = graphClient
                 .me()
                 .buildRequest()
+                .select("displayName,mailboxSettings")
                 .get();
 
             return me;
@@ -83,12 +96,13 @@ El SDK de Microsoft Graph para Java requiere una implementación de `IAuthentica
     import com.microsoft.graph.models.extensions.User;
     ```
 
-1. Agregue el siguiente código en **app. Java** justo antes de `Scanner input = new Scanner(System.in);` la línea para obtener el usuario y generar el nombre para mostrar del usuario.
+1. Agregue el siguiente código en **app. Java** justo antes de la `Scanner input = new Scanner(System.in);` línea para obtener el usuario y generar el nombre para mostrar del usuario.
 
     ```java
     // Greet the user
     User user = Graph.getUser(accessToken);
     System.out.println("Welcome " + user.displayName);
+    System.out.println("Time zone: " + user.mailboxSettings.timeZone);
     System.out.println();
     ```
 
@@ -102,18 +116,35 @@ El SDK de Microsoft Graph para Java requiere una implementación de `IAuthentica
 
 Tenga en cuenta lo que está haciendo este código.
 
-- La dirección URL a la que se `/me/events`llamará es.
-- La `select` función limita los campos devueltos para cada evento a solo aquellos que la aplicación usará realmente.
-- Un `QueryOption` se usa para ordenar los resultados por la fecha y la hora de creación, con el elemento más reciente en primer lugar.
+- La dirección URL a la que se llamará es `/me/calendarview` .
+  - `QueryOption` los objetos se usan para agregar `startDateTime` los `endDateTime` parámetros y, estableciendo el inicio y el final de la vista de calendario.
+  - `QueryOption`Se utiliza un objeto para agregar el `$orderby` parámetro, por lo que ordena los resultados por hora de inicio.
+  - `HeaderOption`Se usa un objeto para agregar el `Prefer: outlook.timezone` encabezado, lo que provoca que las horas de inicio y finalización se ajusten a la zona horaria del usuario.
+  - La `select` función limita los campos devueltos para cada evento a solo aquellos que la aplicación usará realmente.
+  - La `top` función limita el número de eventos en la respuesta a un máximo de 25.
+- La `getNextPage` función se usa para solicitar páginas adicionales de resultados si hay más de 25 eventos en la semana actual.
+
+1. Cree un archivo nuevo en el directorio **./graphtutorial/src/Main/Java/graphtutorial** denominado **GraphToIana. Java** y agregue el código siguiente.
+
+    :::code language="java" source="../demo/graphtutorial/src/main/java/graphtutorial/GraphToIana.java" id="zoneMappingsSnippet":::
+
+    Esta clase implementa una búsqueda simple para convertir los nombres de zona horaria de Windows en identificadores de IANA y generar un **idDeZona** basándose en un nombre de zona horaria de Windows.
 
 ## <a name="display-the-results"></a>Mostrar los resultados
 
 1. Agregue las siguientes `import` instrucciones en **app. Java**.
 
     ```java
+    import java.time.DayOfWeek;
     import java.time.LocalDateTime;
+    import java.time.ZoneId;
+    import java.time.ZonedDateTime;
     import java.time.format.DateTimeFormatter;
+    import java.time.format.DateTimeParseException;
     import java.time.format.FormatStyle;
+    import java.time.temporal.ChronoUnit;
+    import java.time.temporal.TemporalAdjusters;
+    import java.util.HashSet;
     import java.util.List;
     import com.microsoft.graph.models.extensions.DateTimeTimeZone;
     import com.microsoft.graph.models.extensions.Event;
@@ -127,7 +158,7 @@ Tenga en cuenta lo que está haciendo este código.
 
     :::code language="java" source="../demo/graphtutorial/src/main/java/graphtutorial/App.java" id="ListEventsSnippet":::
 
-1. Agregue lo siguiente justo después del `// List the calendar` comentario en la `main` función.
+1. Agregue lo siguiente justo después del `// List the calendar` Comentario en la `main` función.
 
     ```java
     listCalendarEvents(accessToken);
@@ -141,27 +172,52 @@ Tenga en cuenta lo que está haciendo este código.
     Please choose one of the following options:
     0. Exit
     1. Display access token
-    2. List calendar events
+    2. View this week's calendar
+    3. Add an event
     2
     Events:
-    Subject: Team meeting
+    Subject: Weekly meeting
+      Organizer: Lynne Robbins
+      Start: 12/7/20, 2:00 PM (Pacific Standard Time)
+      End: 12/7/20, 3:00 PM (Pacific Standard Time)
+    Subject: Carpool
+      Organizer: Lynne Robbins
+      Start: 12/7/20, 4:00 PM (Pacific Standard Time)
+      End: 12/7/20, 5:30 PM (Pacific Standard Time)
+    Subject: Tailspin Toys Proposal Review + Lunch
+      Organizer: Lidia Holloway
+      Start: 12/8/20, 12:00 PM (Pacific Standard Time)
+      End: 12/8/20, 1:00 PM (Pacific Standard Time)
+    Subject: Project Tailspin
+      Organizer: Lidia Holloway
+      Start: 12/8/20, 3:00 PM (Pacific Standard Time)
+      End: 12/8/20, 4:30 PM (Pacific Standard Time)
+    Subject: Company Meeting
+      Organizer: Christie Cline
+      Start: 12/9/20, 8:30 AM (Pacific Standard Time)
+      End: 12/9/20, 11:00 AM (Pacific Standard Time)
+    Subject: Carpool
+      Organizer: Lynne Robbins
+      Start: 12/9/20, 4:00 PM (Pacific Standard Time)
+      End: 12/9/20, 5:30 PM (Pacific Standard Time)
+    Subject: Project Team Meeting
+      Organizer: Lidia Holloway
+      Start: 12/10/20, 8:00 AM (Pacific Standard Time)
+      End: 12/10/20, 9:30 AM (Pacific Standard Time)
+    Subject: Weekly Marketing Lunch
       Organizer: Adele Vance
-      Start: 5/22/19, 3:00 PM (UTC)
-      End: 5/22/19, 4:00 PM (UTC)
-    Subject: Team Lunch
-      Organizer: Adele Vance
-      Start: 5/24/19, 6:30 PM (UTC)
-      End: 5/24/19, 8:00 PM (UTC)
-    Subject: Flight to Redmond
-      Organizer: Adele Vance
-      Start: 5/26/19, 4:30 PM (UTC)
-      End: 5/26/19, 7:00 PM (UTC)
-    Subject: Let's meet to discuss strategy
-      Organizer: Patti Fernandez
-      Start: 5/27/19, 10:00 PM (UTC)
-      End: 5/27/19, 10:30 PM (UTC)
-    Subject: All-hands meeting
-      Organizer: Adele Vance
-      Start: 5/28/19, 3:30 PM (UTC)
-      End: 5/28/19, 5:00 PM (UTC)
+      Start: 12/10/20, 12:00 PM (Pacific Standard Time)
+      End: 12/10/20, 1:00 PM (Pacific Standard Time)
+    Subject: Project Tailspin
+      Organizer: Lidia Holloway
+      Start: 12/10/20, 3:00 PM (Pacific Standard Time)
+      End: 12/10/20, 4:30 PM (Pacific Standard Time)
+    Subject: Lunch?
+      Organizer: Lynne Robbins
+      Start: 12/11/20, 12:00 PM (Pacific Standard Time)
+      End: 12/11/20, 1:00 PM (Pacific Standard Time)
+    Subject: Friday Unwinder
+      Organizer: Megan Bowen
+      Start: 12/11/20, 4:00 PM (Pacific Standard Time)
+      End: 12/11/20, 5:00 PM (Pacific Standard Time)
     ```
