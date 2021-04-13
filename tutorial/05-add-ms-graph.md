@@ -1,134 +1,60 @@
 ---
-ms.openlocfilehash: 16e96edc78ed2f6955bc14654edba1cb26323648
-ms.sourcegitcommit: 2c0e0d2d6de994022dfa0faa10131582fb10e9b1
+ms.openlocfilehash: 397d564fc3389f341e06977bd4cba861dd1c9e5b
+ms.sourcegitcommit: 5c09eff01b265ddfcca9090c14dca80a95320edd
 ms.translationtype: MT
 ms.contentlocale: es-ES
-ms.lasthandoff: 01/21/2021
-ms.locfileid: "49919532"
+ms.lasthandoff: 04/13/2021
+ms.locfileid: "51695810"
 ---
 <!-- markdownlint-disable MD002 MD041 -->
 
-En este ejercicio incorporará Microsoft Graph en la aplicación. Para esta aplicación, usará el SDK de [Microsoft Graph para Java](https://github.com/microsoftgraph/msgraph-sdk-java) realizar llamadas a Microsoft Graph.
-
-## <a name="implement-an-authentication-provider"></a>Implementar un proveedor de autenticación
-
-El SDK de Microsoft Graph para Java requiere una implementación de `IAuthenticationProvider` la interfaz para crear una instancia de su `GraphServiceClient` objeto.
-
-1. Cree un archivo en el directorio **./graphtutorial/src/main/java/graphtutorial** denominado **SimpleAuthProvider.java** y agregue el siguiente código.
-
-    :::code language="java" source="../demo/graphtutorial/src/main/java/graphtutorial/SimpleAuthProvider.java" id="AuthProviderSnippet":::
+En este ejercicio, incorporará Microsoft Graph a la aplicación. Para esta aplicación, usará el SDK de [Microsoft Graph Java](https://github.com/microsoftgraph/msgraph-sdk-java) para realizar llamadas a Microsoft Graph.
 
 ## <a name="get-user-details"></a>Obtener detalles del usuario
 
-1. Cree un nuevo archivo en el directorio **./graphtutorial/src/main/java/graphtutorial** denominado **Graph.java** y agregue el siguiente código.
+1. Cree un nuevo archivo en el **directorio ./graphtutorial/src/main/java/graphtutorial** denominado **Graph.java** y agregue el código siguiente.
 
-    ```java
-    package graphtutorial;
-
-    import java.time.LocalDateTime;
-    import java.time.ZonedDateTime;
-    import java.time.format.DateTimeFormatter;
-    import java.util.LinkedList;
-    import java.util.List;
-    import java.util.Set;
-
-    import com.microsoft.graph.logger.DefaultLogger;
-    import com.microsoft.graph.logger.LoggerLevel;
-    import com.microsoft.graph.models.extensions.Attendee;
-    import com.microsoft.graph.models.extensions.DateTimeTimeZone;
-    import com.microsoft.graph.models.extensions.EmailAddress;
-    import com.microsoft.graph.models.extensions.Event;
-    import com.microsoft.graph.models.extensions.IGraphServiceClient;
-    import com.microsoft.graph.models.extensions.ItemBody;
-    import com.microsoft.graph.models.extensions.User;
-    import com.microsoft.graph.models.generated.AttendeeType;
-    import com.microsoft.graph.models.generated.BodyType;
-    import com.microsoft.graph.options.HeaderOption;
-    import com.microsoft.graph.options.Option;
-    import com.microsoft.graph.options.QueryOption;
-    import com.microsoft.graph.requests.extensions.GraphServiceClient;
-    import com.microsoft.graph.requests.extensions.IEventCollectionPage;
-    import com.microsoft.graph.requests.extensions.IEventCollectionRequestBuilder;
-
-    /**
-     * Graph
-     */
-    public class Graph {
-
-        private static IGraphServiceClient graphClient = null;
-        private static SimpleAuthProvider authProvider = null;
-
-        private static void ensureGraphClient(String accessToken) {
-            if (graphClient == null) {
-                // Create the auth provider
-                authProvider = new SimpleAuthProvider(accessToken);
-
-                // Create default logger to only log errors
-                DefaultLogger logger = new DefaultLogger();
-                logger.setLoggingLevel(LoggerLevel.ERROR);
-
-                // Build a Graph client
-                graphClient = GraphServiceClient.builder()
-                    .authenticationProvider(authProvider)
-                    .logger(logger)
-                    .buildClient();
-            }
-        }
-
-        public static User getUser(String accessToken) {
-            ensureGraphClient(accessToken);
-
-            // GET /me to get authenticated user
-            User me = graphClient
-                .me()
-                .buildRequest()
-                .select("displayName,mailboxSettings")
-                .get();
-
-            return me;
-        }
-    }
-    ```
+    :::code language="java" source="../demo/graphtutorial/src/main/java/graphtutorial/Graph.java" id="GetUserSnippet":::
 
 1. Agregue la siguiente `import` instrucción en la parte superior de **App.java**.
 
     ```java
-    import com.microsoft.graph.models.extensions.User;
+    import com.microsoft.graph.models.User;
     ```
 
-1. Agregue el siguiente código en **App.java** justo antes de la línea para obtener el usuario y generar el nombre para `Scanner input = new Scanner(System.in);` mostrar del usuario.
+1. Agregue el siguiente código en **App.java justo** antes de la línea para obtener el usuario y generar el nombre para mostrar `Scanner input = new Scanner(System.in);` del usuario.
 
     ```java
     // Greet the user
-    User user = Graph.getUser(accessToken);
+    User user = Graph.getUser();
     System.out.println("Welcome " + user.displayName);
     System.out.println("Time zone: " + user.mailboxSettings.timeZone);
     System.out.println();
     ```
 
-1. Ejecute la aplicación. Después de iniciar sesión en la aplicación, le da la bienvenida por su nombre.
+1. Ejecute la aplicación. Después de iniciar sesión en la aplicación le da la bienvenida por su nombre.
 
-## <a name="get-calendar-events-from-outlook"></a>Obtener eventos de calendario de Outlook
+## <a name="get-calendar-events-from-outlook"></a>Obtener eventos del calendario desde Outlook
 
 1. Agregue la siguiente función a la `Graph` clase en **Graph.java** para obtener eventos del calendario del usuario.
 
     :::code language="java" source="../demo/graphtutorial/src/main/java/graphtutorial/Graph.java" id="GetEventsSnippet":::
 
-Ten en cuenta lo que hace este código.
+Tenga en cuenta lo que está haciendo este código.
 
-- La dirección URL a la que se llamará es `/me/calendarview` .
-  - `QueryOption` se usan para agregar los `startDateTime` parámetros `endDateTime` and, estableciendo el inicio y el final de la vista de calendario.
-  - Un `QueryOption` objeto se usa para agregar el `$orderby` parámetro, ordenando los resultados por hora de inicio.
-  - Un objeto se usa para agregar el encabezado, lo que hace que las horas de inicio y finalización se ajusten a la `HeaderOption` `Prefer: outlook.timezone` zona horaria del usuario.
+- La dirección URL a la que se llamará es `/me/calendarview`.
+  - `QueryOption` objetos se usan para agregar los `startDateTime` parámetros `endDateTime` and, estableciendo el inicio y el final de la vista de calendario.
+  - Se `QueryOption` usa un objeto para agregar el `$orderby` parámetro, ordenando los resultados por hora de inicio.
+  - Un objeto se usa para agregar el encabezado, lo que hace que las horas de inicio y finalización se ajusten a la zona `HeaderOption` `Prefer: outlook.timezone` horaria del usuario.
   - La `select` función limita los campos devueltos para cada evento a solo aquellos que la aplicación usará realmente.
   - La `top` función limita el número de eventos en la respuesta a un máximo de 25.
-- La función se usa para solicitar páginas de resultados adicionales si hay más de `getNextPage` 25 eventos en la semana actual.
+- La función se usa para solicitar páginas adicionales de resultados si hay más de `getNextPage` 25 eventos en la semana actual.
 
-1. Cree un nuevo archivo en el directorio **./graphtutorial/src/main/java/graphtutorial** denominado **GraphToIana.java** y agregue el siguiente código.
+1. Cree un nuevo archivo en el **directorio ./graphtutorial/src/main/java/graphtutorial** denominado **GraphToIana.java** y agregue el código siguiente.
 
     :::code language="java" source="../demo/graphtutorial/src/main/java/graphtutorial/GraphToIana.java" id="zoneMappingsSnippet":::
 
-    Esta clase implementa una búsqueda simple para convertir los nombres de zona horaria de Windows en identificadores IANA y para generar un **ZoneId** basado en un nombre de zona horaria de Windows.
+    Esta clase implementa una búsqueda sencilla para convertir nombres de zona horaria de Windows en identificadores de IANA y para generar un **ZoneId** basado en un nombre de zona horaria de Windows.
 
 ## <a name="display-the-results"></a>Mostrar los resultados
 
@@ -146,8 +72,8 @@ Ten en cuenta lo que hace este código.
     import java.time.temporal.TemporalAdjusters;
     import java.util.HashSet;
     import java.util.List;
-    import com.microsoft.graph.models.extensions.DateTimeTimeZone;
-    import com.microsoft.graph.models.extensions.Event;
+    import com.microsoft.graph.models.DateTimeTimeZone;
+    import com.microsoft.graph.models.Event;
     ```
 
 1. Agregue la siguiente función a la clase para dar formato a las propiedades `App` [dateTimeTimeZone](/graph/api/resources/datetimetimezone?view=graph-rest-1.0) de Microsoft Graph en un formato fácil de usar.
@@ -161,10 +87,10 @@ Ten en cuenta lo que hace este código.
 1. Agregue lo siguiente justo después del `// List the calendar` comentario en la `main` función.
 
     ```java
-    listCalendarEvents(accessToken, user.mailboxSettings.timeZone);
+    listCalendarEvents(user.mailboxSettings.timeZone);
     ```
 
-1. Guarda todos los cambios, compila la aplicación y, a continuación, ejecutala. Elija la **opción Enumerar eventos de** calendario para ver una lista de los eventos del usuario.
+1. Guarda todos los cambios, crea la aplicación y, a continuación, ejecutala. Elija la **opción Enumerar eventos de** calendario para ver una lista de los eventos del usuario.
 
     ```Shell
     Welcome Adele Vance
