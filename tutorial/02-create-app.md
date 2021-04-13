@@ -1,50 +1,49 @@
 ---
-ms.openlocfilehash: 72936993d940cdfb86c864a6ffc543ed466127d1
-ms.sourcegitcommit: eb935a250f8531b04a42710356072b80d46ee3a4
+ms.openlocfilehash: b80de156a5ed1708ccafbaabf34b49b119f4099c
+ms.sourcegitcommit: 5c09eff01b265ddfcca9090c14dca80a95320edd
 ms.translationtype: MT
 ms.contentlocale: es-ES
-ms.lasthandoff: 12/11/2020
-ms.locfileid: "49661084"
+ms.lasthandoff: 04/13/2021
+ms.locfileid: "51695803"
 ---
 <!-- markdownlint-disable MD002 MD041 -->
 
-<span data-ttu-id="34fa7-101">En esta sección, creará una aplicación básica de consola Java.</span><span class="sxs-lookup"><span data-stu-id="34fa7-101">In this section you'll create a basic Java console app.</span></span>
+<span data-ttu-id="09476-101">En esta sección, crearás una aplicación básica Java consola.</span><span class="sxs-lookup"><span data-stu-id="09476-101">In this section you'll create a basic Java console app.</span></span>
 
-1. <span data-ttu-id="34fa7-102">Abra la interfaz de línea de comandos (CLI) en un directorio donde desee crear el proyecto.</span><span class="sxs-lookup"><span data-stu-id="34fa7-102">Open your command-line interface (CLI) in a directory where you want to create the project.</span></span> <span data-ttu-id="34fa7-103">Ejecute el siguiente comando para crear un nuevo proyecto Gradle.</span><span class="sxs-lookup"><span data-stu-id="34fa7-103">Run the following command to create a new Gradle project.</span></span>
+1. <span data-ttu-id="09476-102">Abra la interfaz de línea de comandos (CLI) en un directorio donde desee crear el proyecto.</span><span class="sxs-lookup"><span data-stu-id="09476-102">Open your command-line interface (CLI) in a directory where you want to create the project.</span></span> <span data-ttu-id="09476-103">Ejecute el siguiente comando para crear un nuevo proyecto gradle.</span><span class="sxs-lookup"><span data-stu-id="09476-103">Run the following command to create a new Gradle project.</span></span>
 
     ```Shell
     gradle init --dsl groovy --test-framework junit --type java-application --project-name graphtutorial --package graphtutorial
     ```
 
-1. <span data-ttu-id="34fa7-104">Una vez creado el proyecto, compruebe que funciona ejecutando el siguiente comando para ejecutar la aplicación en la CLI.</span><span class="sxs-lookup"><span data-stu-id="34fa7-104">Once the project is created, verify that it works by running the following command to run the app in your CLI.</span></span>
+1. <span data-ttu-id="09476-104">Una vez creado el proyecto, compruebe que funciona ejecutando el siguiente comando para ejecutar la aplicación en la CLI.</span><span class="sxs-lookup"><span data-stu-id="09476-104">Once the project is created, verify that it works by running the following command to run the app in your CLI.</span></span>
 
     ```Shell
     ./gradlew --console plain run
     ```
 
-    <span data-ttu-id="34fa7-105">Si funciona, la aplicación debe obtener resultados `Hello World.` .</span><span class="sxs-lookup"><span data-stu-id="34fa7-105">If it works, the app should output `Hello World.`.</span></span>
+    <span data-ttu-id="09476-105">Si funciona, la aplicación debe generar `Hello World.` .</span><span class="sxs-lookup"><span data-stu-id="09476-105">If it works, the app should output `Hello World.`.</span></span>
 
-## <a name="install-dependencies"></a><span data-ttu-id="34fa7-106">Instalar dependencias</span><span class="sxs-lookup"><span data-stu-id="34fa7-106">Install dependencies</span></span>
+## <a name="install-dependencies"></a><span data-ttu-id="09476-106">Instalar dependencias</span><span class="sxs-lookup"><span data-stu-id="09476-106">Install dependencies</span></span>
 
-<span data-ttu-id="34fa7-107">Antes de continuar, agregue más dependencias adicionales que usará más adelante.</span><span class="sxs-lookup"><span data-stu-id="34fa7-107">Before moving on, add some additional dependencies that you will use later.</span></span>
+<span data-ttu-id="09476-107">Antes de seguir adelante, agrega algunas dependencias adicionales que usarás más adelante.</span><span class="sxs-lookup"><span data-stu-id="09476-107">Before moving on, add some additional dependencies that you will use later.</span></span>
 
-- <span data-ttu-id="34fa7-108">[Biblioteca de autenticación de Microsoft (MSAL) para Java](https://github.com/AzureAD/microsoft-authentication-library-for-java) para autenticar al usuario y adquirir tokens de acceso.</span><span class="sxs-lookup"><span data-stu-id="34fa7-108">[Microsoft Authentication Library (MSAL) for Java](https://github.com/AzureAD/microsoft-authentication-library-for-java) to authenticate the user and acquire access tokens.</span></span>
-- <span data-ttu-id="34fa7-109">[SDK de Microsoft Graph para Java](https://github.com/microsoftgraph/msgraph-sdk-java) para realizar llamadas a Microsoft Graph.</span><span class="sxs-lookup"><span data-stu-id="34fa7-109">[Microsoft Graph SDK for Java](https://github.com/microsoftgraph/msgraph-sdk-java) to make calls to the Microsoft Graph.</span></span>
-- <span data-ttu-id="34fa7-110">[SLF4J el enlace NOP](https://mvnrepository.com/artifact/org.slf4j/slf4j-nop) para suprimir el registro de MSAL.</span><span class="sxs-lookup"><span data-stu-id="34fa7-110">[SLF4J NOP Binding](https://mvnrepository.com/artifact/org.slf4j/slf4j-nop) to suppress logging from MSAL.</span></span>
+- <span data-ttu-id="09476-108">[Biblioteca de cliente de Azure Identity Java](https://github.com/Azure/azure-sdk-for-java/tree/master/sdk/identity/azure-identity) para autenticar al usuario y adquirir tokens de acceso.</span><span class="sxs-lookup"><span data-stu-id="09476-108">[Azure Identity client library for Java](https://github.com/Azure/azure-sdk-for-java/tree/master/sdk/identity/azure-identity) to authenticate the user and acquire access tokens.</span></span>
+- <span data-ttu-id="09476-109">[Sdk de Microsoft Graph para Java](https://github.com/microsoftgraph/msgraph-sdk-java) realizar llamadas a Microsoft Graph.</span><span class="sxs-lookup"><span data-stu-id="09476-109">[Microsoft Graph SDK for Java](https://github.com/microsoftgraph/msgraph-sdk-java) to make calls to the Microsoft Graph.</span></span>
 
-1. <span data-ttu-id="34fa7-111">Abra **./Build.Gradle**.</span><span class="sxs-lookup"><span data-stu-id="34fa7-111">Open **./build.gradle**.</span></span> <span data-ttu-id="34fa7-112">Actualice la `dependencies` sección para agregar esas dependencias.</span><span class="sxs-lookup"><span data-stu-id="34fa7-112">Update the `dependencies` section to add those dependencies.</span></span>
+1. <span data-ttu-id="09476-110">Abra **./build.gradle**.</span><span class="sxs-lookup"><span data-stu-id="09476-110">Open **./build.gradle**.</span></span> <span data-ttu-id="09476-111">Actualice la `dependencies` sección para agregar esas dependencias.</span><span class="sxs-lookup"><span data-stu-id="09476-111">Update the `dependencies` section to add those dependencies.</span></span>
 
-    :::code language="gradle" source="../demo/graphtutorial/build.gradle" id="DependenciesSnippet" highlight="7-9":::
+    :::code language="gradle" source="../demo/graphtutorial/build.gradle" id="DependenciesSnippet" highlight="7-8":::
 
-1. <span data-ttu-id="34fa7-113">Agregue lo siguiente al final de **./Build.Gradle**.</span><span class="sxs-lookup"><span data-stu-id="34fa7-113">Add the following to the end of **./build.gradle**.</span></span>
+1. <span data-ttu-id="09476-112">Agregue lo siguiente al final de **./build.gradle**.</span><span class="sxs-lookup"><span data-stu-id="09476-112">Add the following to the end of **./build.gradle**.</span></span>
 
     :::code language="gradle" source="../demo/graphtutorial/build.gradle" id="StandardInputSnippet":::
 
-<span data-ttu-id="34fa7-114">La próxima vez que genere el proyecto, Gradle descargará esas dependencias.</span><span class="sxs-lookup"><span data-stu-id="34fa7-114">The next time you build the project, Gradle will download those dependencies.</span></span>
+<span data-ttu-id="09476-113">La próxima vez que cree el proyecto, Gradle descargará esas dependencias.</span><span class="sxs-lookup"><span data-stu-id="09476-113">The next time you build the project, Gradle will download those dependencies.</span></span>
 
-## <a name="design-the-app"></a><span data-ttu-id="34fa7-115">Diseñar la aplicación</span><span class="sxs-lookup"><span data-stu-id="34fa7-115">Design the app</span></span>
+## <a name="design-the-app"></a><span data-ttu-id="09476-114">Diseñar la aplicación</span><span class="sxs-lookup"><span data-stu-id="09476-114">Design the app</span></span>
 
-1. <span data-ttu-id="34fa7-116">Abra el archivo **./src/Main/Java/graphtutorial/app.Java** y reemplace el contenido por lo siguiente.</span><span class="sxs-lookup"><span data-stu-id="34fa7-116">Open the **./src/main/java/graphtutorial/App.java** file and replace its contents with the following.</span></span>
+1. <span data-ttu-id="09476-115">Abra el **archivo ./src/main/java/graphtutorial/App.java** y reemplace su contenido por lo siguiente.</span><span class="sxs-lookup"><span data-stu-id="09476-115">Open the **./src/main/java/graphtutorial/App.java** file and replace its contents with the following.</span></span>
 
     ```java
     package graphtutorial;
@@ -105,4 +104,4 @@ ms.locfileid: "49661084"
     }
     ```
 
-    <span data-ttu-id="34fa7-117">Esto implementa un menú básico y lee la elección del usuario de la línea de comandos.</span><span class="sxs-lookup"><span data-stu-id="34fa7-117">This implements a basic menu and reads the user's choice from the command line.</span></span>
+    <span data-ttu-id="09476-116">Esto implementa un menú básico y lee la elección del usuario desde la línea de comandos.</span><span class="sxs-lookup"><span data-stu-id="09476-116">This implements a basic menu and reads the user's choice from the command line.</span></span>
